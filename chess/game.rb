@@ -6,6 +6,7 @@ class Game
 
   def initialize
     @board = Board.new
+    @board.populate_grid
   end
 
   def play
@@ -35,6 +36,31 @@ class Game
       board.cursor_down
     when 'd'
       board.cursor_right
+    when "\r"
+      if board.selected_pos.nil?
+        set_selected_pos
+      else
+        make_move
+        reset_selected_pos
+      end
     end
   end
+
+  def reset_selected_pos
+    board.selected_pos = nil
+  end
+
+  def set_selected_pos
+    board.selected_pos = board.cursor_pos
+  end
+
+  def make_move
+    board.move
+    rescue => e
+      puts e.message
+  end
+
 end
+
+g = Game.new
+g.play
