@@ -11,5 +11,4 @@ class Bishop < Piece
   def valid_move?(end_pos)
     valid_diagonal?(end_pos) && !moves_into_check?(end_pos)
   end
-
 end

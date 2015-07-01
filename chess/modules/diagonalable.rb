@@ -12,5 +12,4 @@ module Diagonalable
 
     valid_slide?(row_change, col_change, end_pos)
   end
-
 end

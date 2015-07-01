@@ -10,5 +10,4 @@ class Knight < Piece
     super(color, board, pos)
     @icon = color == :black ? "\u265E".black : "\u265E"
   end
-
 end

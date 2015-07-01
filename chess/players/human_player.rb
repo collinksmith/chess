@@ -47,6 +47,4 @@ class HumanPlayer
     false
   end
 
-
-
 end

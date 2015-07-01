@@ -13,5 +13,4 @@ class Queen < Piece
     (valid_diagonal?(end_pos) || valid_straight?(end_pos)) &&
     !moves_into_check?(end_pos)
   end
-
 end

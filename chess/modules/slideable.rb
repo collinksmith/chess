@@ -1,5 +1,4 @@
 module Slideable
-
   def valid_slide?(row_change, col_change, end_pos)
     row_mult = change_multiplier(row_change)
     col_mult = change_multiplier(col_change)

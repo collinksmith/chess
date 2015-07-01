@@ -14,5 +14,4 @@ class King < Piece
   def king?
     true
   end
-
 end
