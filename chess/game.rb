@@ -1,44 +1,41 @@
 require_relative 'board'
+require_relative 'human_player'
 require 'io/console'
 
 class Game
   attr_reader :board
   attr_accessor :players
 
-  def initialize
+  def initialize(player1, player2)
     @board = Board.new
     board.populate_grid
-    @players = [:white, :black]
+    @players = [player1, player2]
+    @players.each { |player| player.board = board}
   end
 
   def play
-    loop do
-      render_board
-      begin
-        action = get_input
-        break if action == 'q'
-      rescue => e
-        puts e.message
-        switch_players!
-        reset_selected_pos
-        retry
-      end
+    until checkmate?
+      get_move
+      switch_players!
+    end
+    render_board
+  end
 
-      if checkmate?(current_player)
-        render_board
-        puts "Checkmate! #{current_player.to_s.capitalize} player loses."
-        break
-      end
+  def get_move
+    moved = false
+    until moved
+      render_board
+      moved = current_player.make_move
     end
   end
 
-  def checkmate?(current_player)
-    board.checkmate?(current_player)
+  def checkmate?
+    board.checkmate?(current_player.color)
   end
 
   def switch_players!
     players.reverse!
-    board.current_player = current_player
+    board.current_player = current_player.color
   end
 
   def current_player
@@ -49,52 +46,17 @@ class Game
     system('clear')
     board.render
 
-    unless checkmate?(current_player)
-      puts "#{current_player.to_s.capitalize}'s turn"
-      puts "Check" if board.in_check?(current_player)
+    if checkmate?
+      puts "Checkmate! #{current_player.to_s.capitalize} player loses."
+    else
+      puts "#{current_player.color.to_s.capitalize}'s turn"
+      puts "Check" if board.in_check?(current_player.color)
     end
-  end
-
-  def get_input
-    action = $stdin.getch
-
-    case action
-    when 'q'
-      'q'
-    when 'w'
-      board.cursor_up
-    when 'a'
-      board.cursor_left
-    when 's'
-      board.cursor_down
-    when 'd'
-      board.cursor_right
-    when "\r"
-      if board.selected_pos.nil?
-        set_selected_pos
-      else
-        make_move
-        reset_selected_pos
-      end
-    end
-  end
-
-  def reset_selected_pos
-    board.selected_pos = nil
-  end
-
-  def set_selected_pos
-    if board[*board.cursor_pos].color == current_player
-      board.selected_pos = board.cursor_pos
-    end
-  end
-
-  def make_move
-    switch_players!
-    board.move
   end
 
 end
 
-g = Game.new
+player1 = HumanPlayer.new(:white)
+player2 = HumanPlayer.new(:black)
+g = Game.new(player1, player2)
 g.play

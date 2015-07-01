@@ -20,7 +20,7 @@ class Piece
   end
 
   def dup(new_board)
-    self.class.new(color, new_board, pos)
+    self.class.new(color, new_board, pos.dup)
   end
 
   def king?

@@ -27,7 +27,7 @@ class Board
       self[*start_pos] = EmptySquare.new
       current_piece.pos = end_pos
     else
-      raise "Invalid move."
+      raise MoveError.new "Invalid move."
     end
   end
 
@@ -45,7 +45,12 @@ class Board
   end
 
   def checkmate?(color)
-    in_check?(color) && pieces(color).all? { |piece| piece.valid_moves.empty? }
+    begin
+      in_check?(color) && pieces(color).all? { |piece| piece.valid_moves.empty? }
+    rescue => e
+      puts e.message
+      byebug
+    end
   end
 
   def pieces(color)
@@ -153,8 +158,8 @@ class Board
 
   def dup
     new_board = Board.new
-    new_board.cursor_pos = cursor_pos
-    new_board.selected_pos = selected_pos
+    new_board.cursor_pos = cursor_pos.dup
+    new_board.selected_pos = selected_pos ? selected_pos.dup : selected_pos
     new_board.grid = grid.map { |row| row.map { |piece| piece.dup(new_board) }}
     new_board
   end
