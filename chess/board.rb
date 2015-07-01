@@ -25,10 +25,12 @@ class Board
   end
 
   def move(start_pos = selected_pos, end_pos = cursor_pos)
-    if self[*start_pos].valid_move?(end_pos)
+    piece = self[*start_pos]
+
+    if piece.valid_move?(end_pos)
       move!(start_pos, end_pos)
     else
-      raise MoveError.new "Invalid move."
+      raise_move_error(piece, end_pos)
     end
   end
 
@@ -74,8 +76,8 @@ class Board
 
   def populate_grid
     grid = Array.new(8)
-    grid[0], grid[7] = other_piece_row(:black, 0), other_piece_row(:white, 7)
-    grid[1], grid[6] = pawn_row(:black, 1), pawn_row(:white, 6)
+    grid[0], grid[7] = other_piece_row(:black), other_piece_row(:white)
+    grid[1], grid[6] = pawn_row(:black), pawn_row(:white)
     2.upto(5) { |row| grid[row] = empty_row }
     @grid = grid
   end
@@ -84,23 +86,20 @@ class Board
     Array.new(8) { EmptySquare.new }
   end
 
-  def pawn_row(color, row)
-    array = []
-    8.times { |col| array << Pawn.new(color, self, [row, col])}
-    array
+  def pawn_row(color)
+    row_idx = color == :white ? 6 : 1
+
+    (0..7).map { |col| Pawn.new(color, self, [row_idx, col]) }
   end
 
-  def other_piece_row(color, row_idx)
-    row = Array.new(8)
-    row[0] = Rook.new(color, self, [row_idx, 0])
-    row[7] = Rook.new(color, self, [row_idx, 7])
-    row[1] = Knight.new(color, self, [row_idx, 1])
-    row[6] = Knight.new(color, self, [row_idx, 6])
-    row[2] = Bishop.new(color, self, [row_idx, 2])
-    row[5] = Bishop.new(color, self, [row_idx, 5])
-    row[3] = Queen.new(color, self, [row_idx, 3])
-    row[4] = King.new(color, self, [row_idx, 4])
-    row
+  def other_piece_row(color)
+    row_idx = color == :white ? 7 : 0
+
+    new_pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+
+    new_pieces.map.with_index do |piece, col_idx|
+      piece.new(color, self, [row_idx, col_idx])
+    end
   end
 
   def cursor_up
@@ -131,8 +130,8 @@ class Board
     end
   end
 
-  def render
-    puts output_string
+  def display
+    puts render
   end
 
   def dup
@@ -150,23 +149,30 @@ class Board
 
   attr_writer :grid
 
-
   private
 
   attr_writer :selected_pos
   attr_accessor :current_player, :cursor_pos
 
+  def raise_move_error(piece, end_pos)
+    if piece.moves_into_check?(end_pos)
+      raise MoveError.new "Can't make a move that leaves you in check."
+    else
+      raise MoveError.new "Invalid move."
+    end
+  end
+
   def other_player
     (current_player == :black) ? :white : :black
   end
 
-  def output_string
+  def render
     grid.map.with_index do |row, r_idx|
-      row_string(row, r_idx)
+      render_row(row, r_idx)
     end.join("\n")
   end
 
-  def row_string(row, r_idx)
+  def render_row(row, r_idx)
     row.map.with_index do |cell, c_idx|
       selected_piece = selected_pos.nil? ? nil : self[*selected_pos]
       cursor_piece = self[*cursor_pos]
