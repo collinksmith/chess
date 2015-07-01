@@ -1,5 +1,4 @@
 require_relative 'piece'
-require 'byebug'
 
 class Pawn < Piece
   def initialize(color, board, pos)
@@ -7,29 +6,7 @@ class Pawn < Piece
     @icon = color == :black ? "\u265F".black : "\u265F"
   end
 
-  # def valid_move?(end_pos)
-  #
-  #   if correct_sign > 0 && row_diff <= 0 || correct_sign < 0 && row_diff >= 0
-  #     return false
-  #   elsif col_diff != 0
-  #     return false if col_diff.abs > 1 || row_diff.abs > 1
-  #     return false if board[*end_pos].color == color || board[*end_pos].empty?
-  #   elsif !moved?
-  #     return false unless row_diff.abs <= 2
-  #     return false unless board[pos[0] + correct_sign, pos[1]].empty?
-  #     if row_diff.abs == 2
-  #       return false unless board[pos[0] + row_diff, pos[1]].empty?
-  #     end
-  #   else
-  #     return false unless row_diff.abs == 1
-  #     return false unless board[pos[0] + correct_sign, pos[1]].empty?
-  #   end
-  #
-  # !moves_into_check?(end_pos)
-  # end
-
   def valid_move?(end_pos)
-    byebug
     return false unless valid_direction?(end_pos)
     row_diff, col_diff = end_pos[0] - pos[0], end_pos[1] - pos[1]
     return false unless row_diff.abs.between?(1, 2)
@@ -45,7 +22,7 @@ class Pawn < Piece
 
   def valid_non_attack?(end_pos, row_diff)
     if moved?
-      row_diff == 1 && board[*end_pos].empty?
+      row_diff.abs == 1 && board[*end_pos].empty?
     else
       valid_first_move?(end_pos, row_diff)
     end
@@ -53,8 +30,8 @@ class Pawn < Piece
 
   def valid_first_move?(end_pos, row_diff)
     sign = (color == :white) ? -1 : 1
-    if row_diff == 2
-      path = [board[*end_pos], board[end_pos.first + sign, end_pos.last]]
+    if row_diff.abs == 2
+      path = [board[*end_pos], board[pos.first + sign, pos.last]]
       path.all? { |piece| piece.empty? }
     else
       board[*end_pos].empty?
