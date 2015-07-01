@@ -21,11 +21,11 @@ class Board
   end
 
   def move(start_pos = selected_pos, end_pos = cursor_pos)
-    if self[*start_pos].valid_move?(end_pos)
-      current_piece = self[*start_pos]
-      self[*end_pos] = current_piece
+    moving_piece = self[*start_pos]
+    if moving_piece.valid_move?(end_pos)
+      self[*end_pos] = moving_piece
       self[*start_pos] = EmptySquare.new
-      current_piece.pos = end_pos
+      moving_piece.pos = end_pos
     else
       raise MoveError.new "Invalid move."
     end
@@ -39,28 +39,21 @@ class Board
   end
 
   def in_check?(color)
-    king_pos = pieces(color).select { |piece| piece.king? }.first.pos
-    opponent_color = (color == :black) ? :white : :black
-    pieces(opponent_color).any? { |piece| piece.valid_move?(king_pos) }
+    king_piece = pieces(color).select { |piece| piece.king? }.first
+    king_pos = king_piece.pos
+    pieces(other_player).any? { |piece| piece.valid_move?(king_pos) }
+  end
+
+  def other_player
+    (current_player == :black) ? :white : :black
   end
 
   def checkmate?(color)
-    begin
-      in_check?(color) && pieces(color).all? { |piece| piece.valid_moves.empty? }
-    rescue => e
-      puts e.message
-      byebug
-    end
+    in_check?(color) && pieces(color).all? { |piece| piece.valid_moves.empty? }
   end
 
   def pieces(color)
-    pieces = []
-    grid.each do |row|
-      row.each do |piece|
-        pieces << piece unless piece.empty? || piece.color != color
-      end
-    end
-    pieces
+    grid.flatten.select { |square| square.color == color }
   end
 
   def positions
