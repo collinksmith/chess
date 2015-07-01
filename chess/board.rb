@@ -1,10 +1,14 @@
-require_relative 'piece'
+require_relative 'pieces/bishop'
+require_relative 'pieces/king'
+require_relative 'pieces/knight'
+require_relative 'pieces/pawn'
+require_relative 'pieces/queen'
+require_relative 'pieces/rook'
 require_relative 'empty_square'
 require 'colorize'
-require 'byebug'
 
 class Board
-  attr_accessor :cursor_pos, :grid, :selected_pos
+  attr_reader :selected_pos, :grid
 
   def initialize(player = :white, cursor_pos = [0, 0], selected_pos = nil)
     @cursor_pos = cursor_pos
@@ -36,7 +40,18 @@ class Board
   end
 
   def switch_players!
-    current_player = other_player
+    self.current_player = other_player
+  end
+
+  def reset_selected_pos
+    self.selected_pos = nil
+  end
+
+  def set_selected_pos
+    if self[*cursor_pos].color == current_player
+      self.selected_pos = cursor_pos
+      print "#{selected_pos}"
+    end
   end
 
   def in_check?(color)
@@ -91,28 +106,28 @@ class Board
   def cursor_up
     if cursor_pos.first > 0
       new_pos = [cursor_pos.first - 1, cursor_pos.last]
-      @cursor_pos = new_pos
+      self.cursor_pos = new_pos
     end
   end
 
   def cursor_down
     if cursor_pos.first < 7
       new_pos = [cursor_pos.first + 1, cursor_pos.last]
-      @cursor_pos = new_pos
+      self.cursor_pos = new_pos
     end
   end
 
   def cursor_right
     if cursor_pos.last < 7
       new_pos = [cursor_pos.first, cursor_pos.last + 1]
-      @cursor_pos = new_pos
+      self.cursor_pos = new_pos
     end
   end
 
   def cursor_left
     if cursor_pos.last > 0
       new_pos = [cursor_pos.first, cursor_pos.last - 1]
-      @cursor_pos = new_pos
+      self.cursor_pos = new_pos
     end
   end
 
@@ -131,8 +146,15 @@ class Board
     nil
   end
 
+  protected
+
+  attr_writer :grid
+
+
   private
-  attr_accessor :current_player
+
+  attr_writer :selected_pos
+  attr_accessor :current_player, :cursor_pos
 
   def other_player
     (current_player == :black) ? :white : :black
