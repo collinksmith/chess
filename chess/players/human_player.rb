@@ -1,4 +1,4 @@
-require_relative 'errors'
+require_relative '../errors'
 
 class HumanPlayer
   attr_reader :color
@@ -15,7 +15,7 @@ class HumanPlayer
       moved = process_input(action)
     rescue MoveError => e
       puts e.message
-      reset_selected_pos
+      board.reset_selected_pos
       retry
     end
 
@@ -36,10 +36,10 @@ class HumanPlayer
       board.cursor_right
     when "\r"
       if board.selected_pos.nil?
-        set_selected_pos
+        board.set_selected_pos
       else
         board.move
-        reset_selected_pos
+        board.reset_selected_pos
         return true
       end
     end
@@ -47,15 +47,6 @@ class HumanPlayer
     false
   end
 
-  def reset_selected_pos
-    board.selected_pos = nil
-  end
-
-  def set_selected_pos
-    if board[*board.cursor_pos].color == color
-      board.selected_pos = board.cursor_pos
-    end
-  end
 
 
 end
