@@ -1,7 +1,5 @@
 class EmptySquare
-  def initialize
-  end
-
+  
   def to_s
     '   '
   end
@@ -25,5 +23,5 @@ class EmptySquare
   def king?
     false
   end
-  
+
 end
