@@ -35,7 +35,7 @@ class Game
 
   def switch_players!
     players.reverse!
-    board.current_player = current_player.color
+    board.switch_players!
   end
 
   def current_player
@@ -47,7 +47,7 @@ class Game
     board.render
 
     if checkmate?
-      puts "Checkmate! #{current_player.to_s.capitalize} player loses."
+      puts "Checkmate! #{current_player.color.to_s.capitalize} player loses."
     else
       puts "#{current_player.color.to_s.capitalize}'s turn"
       puts "Check" if board.in_check?(current_player.color)

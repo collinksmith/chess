@@ -4,12 +4,12 @@ require 'colorize'
 require 'byebug'
 
 class Board
-  attr_accessor :cursor_pos, :grid, :selected_pos, :current_player
+  attr_accessor :cursor_pos, :grid, :selected_pos
 
-  def initialize
-    @cursor_pos = [0, 0]
-    @selected_pos = nil
-    @current_player = :white
+  def initialize(player = :white, cursor_pos = [0, 0], selected_pos = nil)
+    @cursor_pos = cursor_pos
+    @selected_pos = selected_pos
+    @current_player = player
   end
 
   def [](row, col)
@@ -21,11 +21,8 @@ class Board
   end
 
   def move(start_pos = selected_pos, end_pos = cursor_pos)
-    moving_piece = self[*start_pos]
-    if moving_piece.valid_move?(end_pos)
-      self[*end_pos] = moving_piece
-      self[*start_pos] = EmptySquare.new
-      moving_piece.pos = end_pos
+    if self[*start_pos].valid_move?(end_pos)
+      move!(start_pos, end_pos)
     else
       raise MoveError.new "Invalid move."
     end
@@ -38,14 +35,14 @@ class Board
     current_piece.pos = end_pos
   end
 
+  def switch_players!
+    current_player = other_player
+  end
+
   def in_check?(color)
     king_piece = pieces(color).select { |piece| piece.king? }.first
     king_pos = king_piece.pos
     pieces(other_player).any? { |piece| piece.valid_move?(king_pos) }
-  end
-
-  def other_player
-    (current_player == :black) ? :white : :black
   end
 
   def checkmate?(color)
@@ -91,32 +88,6 @@ class Board
     row
   end
 
-  def render
-    puts output_string
-  end
-
-  def output_string
-    grid.map.with_index do |row, r_index|
-      row.map.with_index do |cell, c_index|
-        if [r_index, c_index] == cursor_pos
-          cell.to_s.colorize(background: :green)
-        elsif !selected_pos.nil? &&
-                self[*selected_pos].valid_move?([r_index, c_index]) &&
-                  self[*selected_pos].color == current_player
-          cell.to_s.colorize(background: :yellow)
-        elsif selected_pos.nil? &&
-                self[*cursor_pos].valid_move?([r_index, c_index])&&
-                  self[*cursor_pos].color == current_player
-          cell.to_s.colorize(background: :yellow)
-        elsif (r_index + c_index) % 2 == 0
-          cell.to_s.colorize(background: :light_red)
-        else
-          cell.to_s.colorize(background: :light_cyan)
-        end
-      end.join('')
-    end.join("\n")
-  end
-
   def cursor_up
     if cursor_pos.first > 0
       new_pos = [cursor_pos.first - 1, cursor_pos.last]
@@ -145,16 +116,53 @@ class Board
     end
   end
 
+  def render
+    puts output_string
+  end
+
+  def dup
+    new_selected_pos = selected_pos ? selected_pos.dup : selected_pos
+    new_board = Board.new(current_player, cursor_pos.dup, new_selected_pos)
+    new_board.grid = grid.map { |row| row.map { |piece| piece.dup(new_board) } }
+    new_board
+  end
+
   def inspect
     nil
   end
 
-  def dup
-    new_board = Board.new
-    new_board.cursor_pos = cursor_pos.dup
-    new_board.selected_pos = selected_pos ? selected_pos.dup : selected_pos
-    new_board.grid = grid.map { |row| row.map { |piece| piece.dup(new_board) }}
-    new_board
+  private
+  attr_accessor :current_player
+
+  def other_player
+    (current_player == :black) ? :white : :black
+  end
+
+  def output_string
+    grid.map.with_index do |row, r_idx|
+      row_string(row, r_idx)
+    end.join("\n")
+  end
+
+  def row_string(row, r_idx)
+    row.map.with_index do |cell, c_idx|
+      selected_piece = selected_pos.nil? ? nil : self[*selected_pos]
+      cursor_piece = self[*cursor_pos]
+
+      if [r_idx, c_idx] == cursor_pos
+        cell.to_s.colorize(background: :green)
+      elsif selected_pos && selected_piece.valid_move?([r_idx, c_idx]) &&
+            selected_piece.color == current_player
+        cell.to_s.colorize(background: :yellow)
+      elsif selected_pos.nil? && cursor_piece.valid_move?([r_idx, c_idx]) &&
+            cursor_piece.color == current_player
+        cell.to_s.colorize(background: :yellow)
+      elsif (r_idx + c_idx) % 2 == 0
+        cell.to_s.colorize(background: :light_red)
+      else
+        cell.to_s.colorize(background: :light_cyan)
+      end
+    end.join('')
   end
 
 end
