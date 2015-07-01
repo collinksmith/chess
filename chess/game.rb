@@ -1,5 +1,5 @@
 require_relative 'board'
-require_relative 'human_player'
+require_relative 'players/human_player'
 require 'io/console'
 
 class Game
@@ -20,6 +20,9 @@ class Game
     end
     render_board
   end
+
+
+  private
 
   def get_move
     moved = false
@@ -56,7 +59,9 @@ class Game
 
 end
 
-player1 = HumanPlayer.new(:white)
-player2 = HumanPlayer.new(:black)
-g = Game.new(player1, player2)
-g.play
+if __FILE__ == $PROGRAM_NAME
+  player1 = HumanPlayer.new(:white)
+  player2 = HumanPlayer.new(:black)
+  g = Game.new(player1, player2)
+  g.play
+end
