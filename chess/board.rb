@@ -4,11 +4,12 @@ require 'colorize'
 require 'byebug'
 
 class Board
-  attr_accessor :cursor_pos, :grid, :selected_pos
+  attr_accessor :cursor_pos, :grid, :selected_pos, :current_player
 
   def initialize
     @cursor_pos = [0, 0]
     @selected_pos = nil
+    @current_player = :white
   end
 
   def [](row, col)
@@ -19,15 +20,22 @@ class Board
     grid[row][col] = value
   end
 
-  def move
-    if self[*selected_pos].valid_move?(cursor_pos)
-      current_piece = self[*selected_pos]
-      self[*cursor_pos] = current_piece
-      self[*selected_pos] = EmptySquare.new
-      current_piece.pos = cursor_pos
+  def move(start_pos = selected_pos, end_pos = cursor_pos)
+    if self[*start_pos].valid_move?(end_pos)
+      current_piece = self[*start_pos]
+      self[*end_pos] = current_piece
+      self[*start_pos] = EmptySquare.new
+      current_piece.pos = end_pos
     else
       raise "Invalid move."
     end
+  end
+
+  def move!(start_pos = selected_pos, end_pos = cursor_pos)
+    current_piece = self[*start_pos]
+    self[*end_pos] = current_piece
+    self[*start_pos] = EmptySquare.new
+    current_piece.pos = end_pos
   end
 
   def in_check?(color)
@@ -36,14 +44,22 @@ class Board
     pieces(opponent_color).any? { |piece| piece.valid_move?(king_pos) }
   end
 
+  def checkmate?(color)
+    in_check?(color) && pieces(color).all? { |piece| piece.valid_moves.empty? }
+  end
+
   def pieces(color)
     pieces = []
     grid.each do |row|
       row.each do |piece|
-        pieces << piece unless piece.empty? && piece.color == color
+        pieces << piece unless piece.empty? || piece.color != color
       end
     end
     pieces
+  end
+
+  def positions
+    (0..7).map { |row| (0..7).map { |col| [row, col] } }.inject(&:+)
   end
 
   def populate_grid
@@ -86,9 +102,13 @@ class Board
       row.map.with_index do |cell, c_index|
         if [r_index, c_index] == cursor_pos
           cell.to_s.colorize(background: :green)
-        elsif !selected_pos.nil? && self[*selected_pos].valid_move?([r_index, c_index])
+        elsif !selected_pos.nil? &&
+                self[*selected_pos].valid_move?([r_index, c_index]) &&
+                  self[*selected_pos].color == current_player
           cell.to_s.colorize(background: :yellow)
-        elsif selected_pos.nil? && self[*cursor_pos].valid_move?([r_index, c_index])
+        elsif selected_pos.nil? &&
+                self[*cursor_pos].valid_move?([r_index, c_index])&&
+                  self[*cursor_pos].color == current_player
           cell.to_s.colorize(background: :yellow)
         elsif (r_index + c_index) % 2 == 0
           cell.to_s.colorize(background: :light_red)

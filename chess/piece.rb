@@ -1,6 +1,7 @@
 require_relative 'diagonalable'
 require_relative 'straightable'
 require_relative 'stepable'
+require 'byebug'
 
 class Piece
   attr_reader :icon, :color, :board
@@ -24,6 +25,16 @@ class Piece
 
   def king?
     false
+  end
+
+  def moves_into_check?(end_pos)
+    new_board = board.dup
+    new_board.move!(pos, end_pos)
+    new_board.in_check?(color)
+  end
+
+  def valid_moves
+    board.positions.select { |pos| valid_move?(pos) }
   end
 
 end
@@ -56,7 +67,7 @@ class Pawn < Piece
       return false unless board[pos[0] + correct_sign, pos[1]].empty?
     end
 
-  true
+  !moves_into_check?(end_pos)
   end
 
 end
@@ -69,8 +80,8 @@ class Rook < Piece
     @icon = color == :black ? "\u265C".black : "\u265C"
   end
 
-  def valid_move?(pos)
-    valid_straight?(pos)
+  def valid_move?(end_pos)
+    valid_straight?(end_pos) && !moves_into_check?(end_pos)
   end
 
 end
@@ -83,8 +94,8 @@ class Bishop < Piece
     @icon = color == :black ? "\u265D".black : "\u265D"
   end
 
-  def valid_move?(pos)
-    valid_diagonal?(pos)
+  def valid_move?(end_pos)
+    valid_diagonal?(end_pos) && !moves_into_check?(end_pos)
   end
 
 end
@@ -111,8 +122,9 @@ class Queen < Piece
     @icon = color == :black ? "\u265B".black : "\u265B"
   end
 
-  def valid_move?(pos)
-    valid_diagonal?(pos) || valid_straight?(pos)
+  def valid_move?(end_pos)
+    (valid_diagonal?(end_pos) || valid_straight?(end_pos)) &&
+    !moves_into_check?(end_pos)
   end
 
 end

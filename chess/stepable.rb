@@ -6,6 +6,6 @@ module Stepable
     return false unless self.class::MOVE_DIFFS.include?([row_change, col_change])
     return false if board[*end_pos].color == color
 
-    true
+    !moves_into_check?(end_pos)
   end
 end

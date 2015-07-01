@@ -21,4 +21,9 @@ class EmptySquare
   def dup(board)
     EmptySquare.new
   end
+
+  def king?
+    false
+  end
+  
 end
