@@ -47,7 +47,7 @@ class Game
 
   def render_board
     system('clear')
-    board.render
+    board.display
 
     if checkmate?
       puts "Checkmate! #{current_player.color.to_s.capitalize} player loses."
