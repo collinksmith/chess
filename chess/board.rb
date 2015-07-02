@@ -6,6 +6,7 @@ require_relative 'pieces/queen'
 require_relative 'pieces/rook'
 require_relative 'empty_square'
 require 'colorize'
+require 'byebug'
 
 class Board
   attr_reader :selected_pos, :grid
@@ -57,8 +58,15 @@ class Board
   end
 
   def in_check?(color)
+    other_player = color == :white ? :black : :white
+
     king_piece = pieces(color).select { |piece| piece.king? }.first
-    king_pos = king_piece.pos
+    begin
+      king_pos = king_piece.pos
+    rescue => e
+      puts e.message
+      # byebug
+    end
     pieces(other_player).any? { |piece| piece.valid_move?(king_pos) }
   end
 

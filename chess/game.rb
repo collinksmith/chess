@@ -1,5 +1,6 @@
 require_relative 'board'
 require_relative 'players/human_player'
+require_relative 'players/computer_player'
 require 'io/console'
 
 class Game
@@ -55,13 +56,15 @@ class Game
       puts "#{current_player.color.to_s.capitalize}'s turn"
       puts "Check" if board.in_check?(current_player.color)
     end
+
+    sleep(1) if players.all? { |player| player.is_a?(ComputerPlayer) }
   end
 
 end
 
 if __FILE__ == $PROGRAM_NAME
-  player1 = HumanPlayer.new(:white)
-  player2 = HumanPlayer.new(:black)
+  player1 = ComputerPlayer.new(:white)
+  player2 = ComputerPlayer.new(:black)
   g = Game.new(player1, player2)
   g.play
 end

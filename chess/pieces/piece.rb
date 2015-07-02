@@ -27,6 +27,8 @@ class Piece
   end
 
   def moves_into_check?(end_pos)
+    return false if board[*end_pos].king?
+
     new_board = board.dup
     new_board.move!(pos, end_pos)
     new_board.in_check?(color)
