@@ -22,7 +22,6 @@ class Game
     render_board
   end
 
-
   private
 
   def get_move
@@ -63,7 +62,7 @@ class Game
 end
 
 if __FILE__ == $PROGRAM_NAME
-  player1 = ComputerPlayer.new(:white)
+  player1 = HumanPlayer.new(:white)
   player2 = ComputerPlayer.new(:black)
   g = Game.new(player1, player2)
   g.play

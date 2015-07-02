@@ -1,17 +1,11 @@
-require_relative 'pieces/bishop'
-require_relative 'pieces/king'
-require_relative 'pieces/knight'
-require_relative 'pieces/pawn'
-require_relative 'pieces/queen'
-require_relative 'pieces/rook'
+Dir["./pieces/*"].each { |file| require file }
 require_relative 'empty_square'
 require 'colorize'
-require 'byebug'
 
 class Board
   attr_reader :selected_pos, :grid
 
-  def initialize(player = :white, cursor_pos = [0, 0], selected_pos = nil)
+  def initialize(player = :white, cursor_pos = [6, 4], selected_pos = nil)
     @cursor_pos = cursor_pos
     @selected_pos = selected_pos
     @current_player = player
