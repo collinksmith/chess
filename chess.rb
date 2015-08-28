@@ -1,4 +1,3 @@
-require 'byebug'
 require_relative "lib/game"
 
 def get_game_type

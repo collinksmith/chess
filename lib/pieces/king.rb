@@ -1,5 +1,4 @@
 require_relative 'piece'
-require 'byebug'
 
 class King < Piece
   MOVE_DIFFS = [[1, 1], [1, 0], [1, -1], [0, -1],
