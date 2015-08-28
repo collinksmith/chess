@@ -11,7 +11,7 @@ class Game
     @board = Board.new
     board.populate_grid
     @players = [player1, player2]
-    @players.each { |player| player.board = board}
+    @players.each { |player| player.board = board }
   end
 
   def play

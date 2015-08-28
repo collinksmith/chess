@@ -59,7 +59,6 @@ class Board
       king_pos = king_piece.pos
     rescue => e
       puts e.message
-      # byebug
     end
     pieces(other_player).any? { |piece| piece.valid_move?(king_pos) }
   end
