@@ -23,5 +23,4 @@ class EmptySquare
   def king?
     false
   end
-
 end

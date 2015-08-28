@@ -58,7 +58,6 @@ class Game
 
     sleep(1) if players.all? { |player| player.is_a?(ComputerPlayer) }
   end
-
 end
 
 if __FILE__ == $PROGRAM_NAME

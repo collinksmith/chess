@@ -193,5 +193,4 @@ class Board
       end
     end.join('')
   end
-
 end

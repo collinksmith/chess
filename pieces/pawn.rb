@@ -56,5 +56,4 @@ class Pawn < Piece
     home_row = (color == :white) ? 6 : 1
     pos.first != home_row
   end
-
 end
