@@ -57,9 +57,7 @@ class ComputerPlayer
     check_move_array.each do |start_pos, end_pos|
       new_board = board.dup
       new_board.move!(start_pos, end_pos)
-      if new_board.checkmate?(other_color)
-        moves << [start_pos, end_pos]
-      end
+      moves << [start_pos, end_pos] if new_board.checkmate?(other_color)
     end
     moves
   end
@@ -69,9 +67,7 @@ class ComputerPlayer
     valid_move_array.each do |start_pos, end_pos|
       new_board = board.dup
       new_board.move!(start_pos, end_pos)
-      if new_board.in_check?(other_color)
-        moves << [start_pos, end_pos]
-      end
+      moves << [start_pos, end_pos] if new_board.in_check?(other_color)
     end
     moves
   end
@@ -88,7 +84,6 @@ class ComputerPlayer
         moves << [piece.pos, end_pos]
       end
     end
-
     moves
   end
 end
