@@ -4,10 +4,11 @@ require_relative '../modules/stepable'
 
 class Piece
   attr_reader :icon, :color, :board
-  attr_accessor :pos
+  attr_accessor :pos, :moved
 
   def initialize(color, board, pos)
     @color, @board, @pos = color, board, pos
+    @moved = false
   end
 
   def to_s
@@ -24,6 +25,10 @@ class Piece
 
   def king?
     false
+  end
+
+  def moved?
+    moved
   end
 
   def moves_into_check?(end_pos)

@@ -34,6 +34,7 @@ class Board
     self[*end_pos] = current_piece
     self[*start_pos] = EmptySquare.new
     current_piece.pos = end_pos
+    current_piece.moved = true
   end
 
   def switch_players!
