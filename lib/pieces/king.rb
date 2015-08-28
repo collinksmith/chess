@@ -36,7 +36,7 @@ class King < Piece
     # Check if there is still a rook that hasn't moved
     dir = end_pos[1] > 4 ? 1 : -1
     rook = dir > 0 ? board[home_row, 7] : board[home_row, 0]
-    return false if rook.empty? || rook.moved?
+    return false if !rook.is_a?(Rook) || rook.moved?
 
     # Check if the line is open
     return false unless rook.valid_straight?([home_row, pos[1] + dir])
