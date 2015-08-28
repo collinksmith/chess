@@ -63,7 +63,7 @@ end
 if __FILE__ == $PROGRAM_NAME
   player1 = HumanPlayer.new(:white)
   player2 = ComputerPlayer.new(:black)
-  g = Game.new(player1, player2)
-  g.play
+  game = Game.new(player1, player2)
+  game.play
 end
 
