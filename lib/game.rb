@@ -4,14 +4,15 @@ require_relative 'players/computer_player'
 require 'io/console'
 
 class Game
-  attr_reader :board
+  attr_reader :board, :sleep_time
   attr_accessor :players
 
-  def initialize(player1, player2)
+  def initialize(player1, player2, sleep_time)
     @board = Board.new
     board.populate_grid
     @players = [player1, player2]
     @players.each { |player| player.board = board }
+    @sleep_time = sleep_time
   end
 
   def play
@@ -56,7 +57,7 @@ class Game
       puts "Check" if board.in_check?(current_player.color)
     end
 
-    sleep(1) if players.all? { |player| player.is_a?(ComputerPlayer) }
+    sleep(sleep_time) if players.all? { |player| player.is_a?(ComputerPlayer) }
   end
 end
 
