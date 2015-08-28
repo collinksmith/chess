@@ -23,7 +23,11 @@ class Board
     piece = self[*start_pos]
 
     if piece.valid_move?(end_pos)
-      move!(start_pos, end_pos)
+      if piece.king? && piece.valid_castle?(end_pos)
+        castle!
+      else
+        move!(start_pos, end_pos)
+      end
     else
       raise_move_error(piece, end_pos)
     end
@@ -35,6 +39,18 @@ class Board
     self[*start_pos] = EmptySquare.new
     current_piece.pos = end_pos
     current_piece.moved = true
+  end
+
+  def castle!(start_pos = selected_pos, end_pos = cursor_pos)
+    move!(start_pos, end_pos)
+    dir = end_pos[1] > 4 ? 1 : -1
+    rook_pos = dir > 0 ? [end_pos[0], 7] : [end_pos[0], 0]
+    rook = self[*rook_pos]
+    end_rook_pos = [end_pos[0], end_pos[1] - dir]
+    self[*end_rook_pos] = rook
+    self[*rook_pos] = EmptySquare.new
+    rook.pos = end_rook_pos
+    rook.moved = true
   end
 
   def switch_players!
