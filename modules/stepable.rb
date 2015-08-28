@@ -1,5 +1,5 @@
 module Stepable
-  def valid_move?(end_pos)
+  def valid_step?(end_pos)
     row_change = end_pos[0] - pos[0]
     col_change = end_pos[1] - pos[1]
 

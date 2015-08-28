@@ -10,4 +10,8 @@ class Knight < Piece
     super(color, board, pos)
     @icon = color == :black ? "\u265E".black : "\u265E"
   end
+
+  def valid_move?(end_pos)
+    valid_step?(end_pos)
+  end
 end

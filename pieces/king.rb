@@ -11,6 +11,10 @@ class King < Piece
     @icon = color == :black ? "\u265A".black : "\u265A"
   end
 
+  def valid_move?(end_pos)
+    valid_step?(end_pos)
+  end
+
   def king?
     true
   end
