@@ -3,7 +3,7 @@ require_relative "lib/game"
 
 def get_game_type
   question = <<-QUESTION
-Which type of game do you want to play? Enter the number indicated on the left:
+Which type of game do you want to play? Enter the number indicated on the left: (Default is 2)
 1 - Human vs Human
 2 - White Human vs Black AI
 3 - Black Human vs White AI
@@ -11,12 +11,14 @@ Which type of game do you want to play? Enter the number indicated on the left:
   QUESTION
 
   puts question
-  gets.chomp.to_i
+  game_type = gets.chomp
+  game_type == "" ? 2 : game_type.to_i
 end
 
 def get_sleep_time
-  puts "How long do you want to wait between turns? (Enter a number of seconds)"
-  gets.chomp.to_i
+  puts "How long do you want to wait between turns? (Enter a number of seconds. Deault is 0.5)"
+  sleep_time = gets.chomp
+  sleep_time == "" ? 0.5 : sleep_time.to_f
 end
 
 def setup_game(game_type, sleep_time)
@@ -35,13 +37,7 @@ def setup_game(game_type, sleep_time)
     player2 = ComputerPlayer.new(:black)
   end
 
-  if sleep_time
-    game = Game.new(player1, player2, sleep_time)
-  else
-    game = Game.new(player1, player2)
-  end
-
-  game
+  Game.new(player1, player2, sleep_time)
 end
 
 if __FILE__ == $PROGRAM_NAME
