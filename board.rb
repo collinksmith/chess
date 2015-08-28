@@ -47,7 +47,6 @@ class Board
   def set_selected_pos
     if self[*cursor_pos].color == current_player
       self.selected_pos = cursor_pos
-      print "#{selected_pos}"
     end
   end
 

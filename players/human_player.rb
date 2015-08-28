@@ -40,10 +40,10 @@ class HumanPlayer
       else
         board.move
         board.reset_selected_pos
-        return true
+        return true #Indicate that a piece was moved
       end
     end
 
-    false
+    false # Indicate that a piece wasn't moved
   end
 end
