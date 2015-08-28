@@ -1,5 +1,11 @@
-Dir["./pieces/*"].each { |file| require file }
 require_relative 'empty_square'
+require_relative 'pieces/bishop'
+require_relative 'pieces/king'
+require_relative 'pieces/knight'
+require_relative 'pieces/pawn'
+require_relative 'pieces/piece'
+require_relative 'pieces/queen'
+require_relative 'pieces/rook'
 require 'colorize'
 
 class Board
@@ -111,7 +117,6 @@ class Board
 
   def other_piece_row(color)
     row_idx = color == :white ? 7 : 0
-
     new_pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
 
     new_pieces.map.with_index do |piece, col_idx|
