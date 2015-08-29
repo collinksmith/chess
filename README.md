@@ -12,9 +12,7 @@ Move your cursor with the wasd keys. To move a piece, bring the cursor to its po
 
 Valid move positions are highlighed in yellow.
 
-![chess][chess-pic]
-
-[chess-pic]: https://github.com/collinksmith/chess/tree/master/assets/images/chess.png
+![chess](/assets/images/chess.png)
 
 To quit the game, press q when it is your turn. When viewing an AI vs AI game, press ctrl+c to abort the program.
 
