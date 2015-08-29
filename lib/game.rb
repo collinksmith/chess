@@ -3,8 +3,6 @@ require_relative 'players/human_player'
 require_relative 'players/computer_player'
 require 'io/console'
 
-require 'byebug'
-
 class Game
   attr_reader :board, :sleep_time
   attr_accessor :players
