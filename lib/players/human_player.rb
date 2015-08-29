@@ -22,8 +22,8 @@ class HumanPlayer
     moved
   end
 
-  def make_promotion
-    put "Which piece do you want? (Q, N, R, B, P)"
+  def choose_promotion
+    puts "Which piece do you want? (Q, N, R, B, P)"
     gets.chomp.upcase
   end
 

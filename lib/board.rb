@@ -28,19 +28,9 @@ class Board
   end
 
   def can_promote?
-    current_pieces = pieces.select { |piece| piece.color == current_player }
-    end_row = current_player == :white ? 0 : 7
-    promotion_pieces = current_plieces.select do |piece|
-      piece.is_a?(Pawn) && piece.pos[0] == end_row
-    end
-
-    promotion_pece = promotion_pieces.first
-    if promotion_piece
-      self.promotion_piece = promotion_piece
-      return true
-    else
-      return false
-    end
+    piece = pieces(current_player).select { |piece| piece.can_promote? }.first
+    self.promotion_piece = piece if piece
+    piece
   end
 
   def move(start_pos = selected_pos, end_pos = cursor_pos)
@@ -63,13 +53,6 @@ class Board
     self[*start_pos] = EmptySquare.new
     current_piece.pos = end_pos
     current_piece.moved = true
-
-    if current_piece.can_promote?
-      promotion_piece = current_piece
-      byebug
-    else
-      promotion_piece = nil
-    end
   end
 
   def promote!(choice)

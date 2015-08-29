@@ -3,6 +3,8 @@ require_relative 'players/human_player'
 require_relative 'players/computer_player'
 require 'io/console'
 
+require 'byebug'
+
 class Game
   attr_reader :board, :sleep_time
   attr_accessor :players
@@ -18,7 +20,7 @@ class Game
   def play
     until checkmate?
       get_move
-      make_promotion if board.promotion_piece
+      make_promotion if board.can_promote?
       switch_players!
     end
     render_board
