@@ -65,6 +65,9 @@ class Board
     when 'P'
       new_piece = Pawn.new(color, self, pos)
     end
+
+    self[*pos] = new_piece
+    promotion_piece = nil
   end
 
   def castle!(start_pos = selected_pos, end_pos = cursor_pos)
