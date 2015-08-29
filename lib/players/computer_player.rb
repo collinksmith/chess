@@ -28,6 +28,7 @@ class ComputerPlayer
     else
       raise "No available moves"
     end
+    
     true
   end
 
