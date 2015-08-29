@@ -14,7 +14,7 @@ Valid move positions are highlighed in yellow.
 
 ![chess][chess-pic]
 
-[chess-pic]: https://github.com/collinksmith/chess/tree/master/assets/images
+[chess-pic]: https://github.com/collinksmith/chess/tree/master/assets/images/chess.png
 
 To quit the game, press q when it is your turn. When viewing an AI vs AI game, press ctrl+c to abort the program.
 
