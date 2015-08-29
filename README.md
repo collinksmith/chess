@@ -4,7 +4,9 @@
 
 ### Running the program
 
-Download the code and run chess.rb. You will be prompted to select the type of game you want to play.
+You will need Ruby installed on your system.
+
+Download the code, navigate to the main directory, and run `bundle install`. Then run chess.rb with your ruby interpreter (i.e. type `ruby chess.rb` in the terminal). You will be prompted to select the type of game you want to play.
 
 ### Playing the game
 
@@ -18,7 +20,7 @@ To quit the game, press q when it is your turn. When viewing an AI vs AI game, p
 
 ## Technologies
 
-This game was built in Ruby. It uses the [colorize][colorize] gem to color the board on the command line, and the [io-console][io] gem to enable use of $stdin.getch.
+This game was built from scratch with Ruby. It uses the [colorize][colorize] gem to color the board on the command line, and the [io-console][io] gem to enable use of $stdin.getch.
 
 [colorize]: https://github.com/fazibear/colorize
 [io]: https://rubygems.org/gems/io-console/versions/0.4.2
