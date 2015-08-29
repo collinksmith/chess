@@ -7,6 +7,10 @@ class ComputerPlayer
     @board = nil
   end
 
+  def choose_promotion
+    "Q"
+  end
+
   def make_move
     valid_move_array = valid_moves
     attack_move_array = attack_moves(valid_move_array)
