@@ -18,12 +18,18 @@ class Game
   def play
     until checkmate?
       get_move
+      make_promotion if board.promotion_piece
       switch_players!
     end
     render_board
   end
 
   private
+
+  def make_promotion
+    promotion_choice = current_player.choose_promotion
+    board.promote!(promotion_choice)
+  end
 
   def get_move
     moved = false

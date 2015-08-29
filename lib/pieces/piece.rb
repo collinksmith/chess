@@ -11,6 +11,10 @@ class Piece
     @moved = false
   end
 
+  def can_promote?
+    false
+  end
+
   def to_s
     " #{icon.to_s} "
   end

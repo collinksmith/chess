@@ -15,6 +15,7 @@ class Board
     @cursor_pos = cursor_pos
     @selected_pos = selected_pos
     @current_player = player
+    @promotion_piece = nil
   end
 
   def [](row, col)
@@ -45,6 +46,25 @@ class Board
     self[*start_pos] = EmptySquare.new
     current_piece.pos = end_pos
     current_piece.moved = true
+
+    promotion_piece = current_piece if current_piece.can_promote?
+  end
+
+  def promote!(choice)
+    color = promotion_piece.color
+    pos = promotion_piece.pos
+    case choice
+    when 'Q'
+      new_piece = Queen.new(color, self, pos)
+    when 'N'
+      new_piece = Knight.new(color, self, pos)
+    when 'R'
+      new_piece = Rook.new(color, self, pos)
+    when 'B'
+      new_piece = Bishop.new(color, self, pos)
+    when 'P'
+      new_piece = Pawn.new(color, self, pos)
+    end
   end
 
   def castle!(start_pos = selected_pos, end_pos = cursor_pos)
@@ -174,7 +194,7 @@ class Board
   private
 
   attr_writer :selected_pos
-  attr_accessor :current_player, :cursor_pos
+  attr_accessor :current_player, :cursor_pos, :promotion_piece
 
   def raise_move_error(piece, end_pos)
     if piece.moves_into_check?(end_pos)

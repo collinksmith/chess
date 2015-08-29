@@ -22,6 +22,11 @@ class HumanPlayer
     moved
   end
 
+  def make_promotion
+    put "Which piece do you want? (Q, N, R, B, P)"
+    gets.chomp.upcase
+  end
+
   def process_input(action)
     case action
     when 'q'

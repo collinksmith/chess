@@ -56,4 +56,12 @@ class Pawn < Piece
     home_row = (color == :white) ? 6 : 1
     pos.first != home_row
   end
+
+  def can_promote?
+    if color == :white
+      return pos[0] == 0
+    else
+      return pos[0] == 7
+    end
+  end
 end
