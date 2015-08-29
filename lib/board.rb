@@ -1,3 +1,4 @@
+require 'byebug'
 require_relative 'empty_square'
 require_relative 'pieces/bishop'
 require_relative 'pieces/king'
@@ -9,7 +10,7 @@ require_relative 'pieces/rook'
 require 'colorize'
 
 class Board
-  attr_reader :selected_pos, :grid
+  attr_reader :selected_pos, :grid, :promotion_piece
 
   def initialize(player = :white, cursor_pos = [6, 4], selected_pos = nil)
     @cursor_pos = cursor_pos
@@ -24,6 +25,22 @@ class Board
 
   def []=(row, col, value)
     grid[row][col] = value
+  end
+
+  def can_promote?
+    current_pieces = pieces.select { |piece| piece.color == current_player }
+    end_row = current_player == :white ? 0 : 7
+    promotion_pieces = current_plieces.select do |piece|
+      piece.is_a?(Pawn) && piece.pos[0] == end_row
+    end
+
+    promotion_pece = promotion_pieces.first
+    if promotion_piece
+      self.promotion_piece = promotion_piece
+      return true
+    else
+      return false
+    end
   end
 
   def move(start_pos = selected_pos, end_pos = cursor_pos)
@@ -47,7 +64,12 @@ class Board
     current_piece.pos = end_pos
     current_piece.moved = true
 
-    promotion_piece = current_piece if current_piece.can_promote?
+    if current_piece.can_promote?
+      promotion_piece = current_piece
+      byebug
+    else
+      promotion_piece = nil
+    end
   end
 
   def promote!(choice)
@@ -196,8 +218,8 @@ class Board
 
   private
 
-  attr_writer :selected_pos
-  attr_accessor :current_player, :cursor_pos, :promotion_piece
+  attr_writer :selected_pos, :promotion_piece
+  attr_accessor :current_player, :cursor_pos
 
   def raise_move_error(piece, end_pos)
     if piece.moves_into_check?(end_pos)
