@@ -1,5 +1,7 @@
 # Chess
 
+This is a command line ruby implementation of chess. It has a simple AI and can be played human vs human, human vs AI, or AI vs AI.
+
 ## How to Use
 
 ### Running the program
